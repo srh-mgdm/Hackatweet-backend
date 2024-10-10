@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const tweetSchema = mongoose.Schema({
     users: [{ type: mongoose.Schema.Types.ObjectId, ref: 'users' }],
-    tweetMessages: String,
+    tweetMessage: String,
     createdAt: Date,
     likesCounter: Number,
     isLiked: Boolean,

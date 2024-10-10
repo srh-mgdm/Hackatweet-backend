@@ -7,8 +7,7 @@ const Tweet = require('../models/tweets');
 const { checkBody } = require('../modules/checkBody');
 const moment = require('moment');
 
-const uid2 = require('uid2');
-const bcrypt = require('bcrypt');
+
 
 
 router.get('/',(req, res) => {
@@ -17,11 +16,11 @@ router.get('/',(req, res) => {
     .then(tweets=>res.json({result:true, tweets:tweets}))
 })
 router.post('/addTweet', (req, res) => {
-    const { userId, tweetMessages, hashtags } = req.body;
+    const { userId, tweetMessage, hashtags } = req.body;
 
     const newTweet = new Tweet({
         users: [userId],
-        tweetMessages: tweetMessages,
+        tweetMessage: tweetMessage,
         createdAt: moment().toISOString(),
         likesCounter: 0,
         isLiked: false,
@@ -37,6 +36,7 @@ router.post('/addTweet', (req, res) => {
         const timeAgo = moment(tweetWithUser.createdAt).fromNow();
         res.status(201).json({ message: 'Tweet added successfully!', tweet: tweetWithUser, timeAgo: timeAgo });
     })
+   
 
 });
 module.exports = router;
