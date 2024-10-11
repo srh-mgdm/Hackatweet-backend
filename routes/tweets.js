@@ -48,38 +48,38 @@ router.post('/addTweet', (req, res) => {
             res.status(500).json({ result: false, message: 'Error adding tweet' });
         });
 });
-router.post('/like', (req, res) => {
-    const { tweetId, isLiked } = req.body;
+// router.post('/like', (req, res) => {
+//     const { tweetId, isLiked } = req.body;
 
 
-    Tweet.findById(tweetId, (err, tweet) => {
-      if (err) {
-        console.error('Error finding tweet:', err);
-        return res.status(500).json({ success: false, message: 'Server error' });
-      }
+//     Tweet.findById(tweetId, (err, tweet) => {
+//       if (err) {
+//         console.error('Error finding tweet:', err);
+//         return res.status(500).json({ success: false, message: 'Server error' });
+//       }
 
-      if (!tweet) {
-        return res.status(404).json({ success: false, message: 'Tweet not found' });
-      }
+//       if (!tweet) {
+//         return res.status(404).json({ success: false, message: 'Tweet not found' });
+//       }
 
 
-      if (isLiked) {
+//       if (isLiked) {
 
-        tweet.likesCounter -= 1;
-      } else {
+//         tweet.likesCounter -= 1;
+//       } else {
 
-        tweet.likesCounter += 1;
-      }
+//         tweet.likesCounter += 1;
+//       }
 
-     
-      tweet.save((saveErr) => {
-        if (saveErr) {
-          console.error('Error saving tweet:', saveErr);
-          return res.status(500).json({ success: false, message: 'Server error' });
-        }
 
-        return res.status(200).json({ success: true, likesCounter: tweet.likesCounter });
-      });
-    });
-  });
+//       tweet.save((saveErr) => {
+//         if (saveErr) {
+//           console.error('Error saving tweet:', saveErr);
+//           return res.status(500).json({ success: false, message: 'Server error' });
+//         }
+
+//         return res.status(200).json({ success: true, likesCounter: tweet.likesCounter });
+//       });
+//     });
+//   });
 module.exports = router;
