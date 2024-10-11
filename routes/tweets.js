@@ -16,27 +16,36 @@ router.get('/',(req, res) => {
     .then(tweets=>res.json({result:true, tweets:tweets}))
 })
 router.post('/addTweet', (req, res) => {
-    const { userId, tweetMessage, hashtags } = req.body;
+    const { token, tweetMessage, hashtags } = req.body;
+    console.log('Received data:', { token, tweetMessage, hashtags });
 
-    const newTweet = new Tweet({
-        users: [userId],
-        tweetMessage: tweetMessage,
-        createdAt: moment().toISOString(),
-        likesCounter: 0,
-        isLiked: false,
-        hashtags: hashtags,
-    });
+    User.findOne({ token })
+        .then(user => {
+            if (!user) {
+                return res.json({ result: false, message: 'User not found' });
+            }
 
-    newTweet.save()
-    .then(savedTweet => {
-        // with populate we receive the information of user
-        return Tweet.findById(savedTweet._id).populate('users');
-    })
-    .then(tweetWithUser => {
-        const timeAgo = moment(tweetWithUser.createdAt).fromNow();
-        res.status(201).json({ message: 'Tweet added successfully!', tweet: tweetWithUser, timeAgo: timeAgo });
-    })
+            const newTweet = new Tweet({
+                users: [user._id],
+                tweetMessage: tweetMessage,
+                createdAt: moment().toISOString(),
+                likesCounter: 0,
+                isLiked: false,
+                hashtags: hashtags,
+            });
 
-
+            return newTweet.save();
+        })
+        .then(savedTweet => {
+            return Tweet.findById(savedTweet._id).populate('users');
+        })
+        .then(tweetWithUser => {
+            const timeAgo = moment(tweetWithUser.createdAt).fromNow();
+            res.status(201).json({ message: 'Tweet added successfully!', tweet: tweetWithUser, timeAgo: timeAgo });
+        })
+        .catch(err => {
+            console.error('Error adding tweet:', err);
+            res.status(500).json({ result: false, message: 'Error adding tweet' });
+        });
 });
 module.exports = router;
