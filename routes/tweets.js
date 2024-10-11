@@ -36,7 +36,7 @@ router.post('/addTweet', (req, res) => {
         const timeAgo = moment(tweetWithUser.createdAt).fromNow();
         res.status(201).json({ message: 'Tweet added successfully!', tweet: tweetWithUser, timeAgo: timeAgo });
     })
-   
+
 
 });
 module.exports = router;
